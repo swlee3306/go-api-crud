@@ -1,12 +1,13 @@
+//go:build legacy
+
 package main
 
 import (
 	"errors"
+	"github.com/swlee3306/go-api-crud/internal/sysenv"
 	"io"
 	"log"
 	"os"
-
-	"baton-om-data-apiservice/internal/sysenv"
 
 	"gopkg.in/yaml.v2"
 )

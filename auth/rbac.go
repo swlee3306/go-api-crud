@@ -2,7 +2,7 @@ package auth
 
 import (
 	"fmt"
-	"go-crud/models"
+	"github.com/swlee3306/go-api-crud/models"
 
 	"gorm.io/gorm"
 )

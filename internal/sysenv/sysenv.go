@@ -1,3 +1,5 @@
+//go:build legacy
+
 package sysenv
 
 var Mode struct {

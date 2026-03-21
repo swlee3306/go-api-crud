@@ -1,8 +1,10 @@
+//go:build legacy
+
 package dblinker
 
 import (
-	"baton-om-data-apiservice/internal/dblinker/dbmd"
-	"baton-om-data-apiservice/internal/sysenv"
+	"github.com/swlee3306/go-api-crud/internal/dblinker/dbmd"
+	"github.com/swlee3306/go-api-crud/internal/sysenv"
 	"log"
 	"time"
 

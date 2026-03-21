@@ -3,8 +3,8 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"go-crud/config"
-	"go-crud/models"
+	"github.com/swlee3306/go-api-crud/config"
+	"github.com/swlee3306/go-api-crud/models"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -96,11 +96,10 @@ func (as *AuthService) RefreshToken(tokenString string) (string, error) {
 	return as.GenerateToken(user)
 }
 
-func (as *AuthService) Login(email, password string) (*models.User, string, error) {
+func (as *AuthService) Login(identifier, password string) (*models.User, string, error) {
 	var user models.User
 	
-	// Find user by email
-	if err := config.DB.Where("email = ?", email).First(&user).Error; err != nil {
+	if err := config.DB.Where("email = ? OR username = ?", identifier, identifier).First(&user).Error; err != nil {
 		return nil, "", fmt.Errorf("invalid credentials")
 	}
 	
