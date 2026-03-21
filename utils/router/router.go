@@ -1,8 +1,10 @@
+//go:build legacy
+
 package router
 
 import (
-	"baton-om-data-apiservice/internal/dblinker"
-	"baton-om-data-apiservice/internal/sysenv"
+	"github.com/swlee3306/go-api-crud/internal/dblinker"
+	"github.com/swlee3306/go-api-crud/internal/sysenv"
 	"log"
 	"net/http"
 

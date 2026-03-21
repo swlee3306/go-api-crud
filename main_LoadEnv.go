@@ -1,11 +1,12 @@
+//go:build legacy
+
 package main
 
 import (
 	"os"
+	"strconv"
 
-	"baton-om-data-apiservice/internal/sysenv"
-
-	"bitbucket.org/okestrolab/baton-om-sdk/btoutil"
+	"github.com/swlee3306/go-api-crud/internal/sysenv"
 )
 
 func main_LoadEnvDb() error {
@@ -16,10 +17,10 @@ func main_LoadEnvDb() error {
 			sysenv.Database.Dsn = val
 		}
 		if val, ok := os.LookupEnv("BATON_DATABASE_MAX_IDLE_CONNS"); ok && (len(val) > 0) {
-			sysenv.Database.MaxIdleConns = btoutil.ToInt(val)
+			sysenv.Database.MaxIdleConns, _ = strconv.Atoi(val)
 		}
 		if val, ok := os.LookupEnv("BATON_DATABASE_MAX_LIFETIME_HOUR"); ok && (len(val) > 0) {
-			sysenv.Database.MaxLifetimeHour = btoutil.ToInt(val)
+			sysenv.Database.MaxLifetimeHour, _ = strconv.Atoi(val)
 		}
 	}
 

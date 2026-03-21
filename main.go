@@ -1,71 +1,93 @@
 package main
 
 import (
-	"baton-om-data-apiservice/internal/sysdef"
-	"baton-om-data-apiservice/internal/sysenv"
-	"baton-om-data-apiservice/utils/router"
 	"fmt"
+	authsvc "github.com/swlee3306/go-api-crud/auth"
+	"github.com/swlee3306/go-api-crud/config"
+	"github.com/swlee3306/go-api-crud/health"
+	"github.com/swlee3306/go-api-crud/middleware"
+	"github.com/swlee3306/go-api-crud/models"
+	"github.com/swlee3306/go-api-crud/routes"
+	"github.com/gin-gonic/gin"
 	"log"
 	"os"
-	"os/signal"
 	"strconv"
-	"syscall"
+	"time"
 
-	"bitbucket.org/okestrolab/baton-ao-sdk/btoutil"
-	"gorm.io/gorm"
 )
 
 var (
 	X_buildDatetime, X_buildRevision, X_buildRevisionShort, X_buildBranch, X_buildTag string
-	Db *gorm.DB
 )
 
 func main() {
-
-	// 함수 이름과 에러 변수를 초기화합니다.
-	fnc := "main"
-	err := error(nil)
-
-	// 빌드 정보를 로그에 출력합니다.
-	log.Printf("%s: 빌드 정보", fnc)
+	log.Printf("go-api-crud: build info")
 	log.Printf("\t buildDatetime: %s", X_buildDatetime)
 	log.Printf("\t buildRevision: %s (%s)", X_buildRevisionShort, X_buildRevision)
 	log.Printf("\t buildBranch: %s", X_buildBranch)
 	log.Printf("\t buildTag: %s", X_buildTag)
 
-	{
-		// 시간 위치 설정
-		//btoutil.SetDefaultTimeZone("UTC")
-		btoutil.SetDefaultTimeZone("Asia/Seoul")
+	dbManager, err := config.NewDatabaseManager()
+	if err != nil {
+		log.Fatalf("failed to create database manager: %v", err)
+	}
+	defer dbManager.Close()
 
-		// 디버그 모드 설정
-		if val, ok := os.LookupEnv("OKE_DEBUG"); ok && (len(val) > 0) {
-			sysenv.Mode.IsDebug, _ = strconv.ParseBool(val)
-		}
+	config.DB = dbManager.GetDB()
 
-		// 설정 파일 이름 설정
-		if val, ok := os.LookupEnv("BATON_SETTING_FILENAME"); ok && (len(val) > 0) {
-			sysdef.ConfFilename = val
-		}
-
-		// 설정 파일 로드
-		if err = main_LoadYml(sysdef.ConfFilename); err != nil {
-			panic(fmt.Sprintf("%s: Cfg load 실패: %s", fnc, err.Error()))
-		}
+	if err := models.AutoMigrate(config.DB); err != nil {
+		log.Fatalf("failed to run auto migration: %v", err)
 	}
 
-	// Gin 서버를 시작합니다.
-	router.StartGinServer()
+	authService := authsvc.NewAuthService(getEnv("JWT_SECRET", ""))
+	rateLimiter := middleware.NewRateLimiter(
+		getEnvInt("RATE_LIMIT_REQUESTS", 100),
+		time.Duration(getEnvInt("RATE_LIMIT_WINDOW_MINUTES", 1))*time.Minute,
+	)
 
-	// 무한 루프
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt)
-	for sig := range c {
-		log.Printf("인터럽트 발생: %v", sig)
+	router := gin.Default()
+	router.Use(gin.Recovery())
+	router.Use(middleware.IPRateLimitMiddleware(rateLimiter))
 
-		if sig == syscall.SIGINT || sig == syscall.SIGTERM {
-			break
-		}
+	health.SetupHealthRoutes(router, appVersion())
+	routes.SetupRoutes(router, authService)
+
+	addr := fmt.Sprintf("%s:%s", getEnv("SERVER_HOST", ""), getEnv("SERVER_PORT", "8080"))
+	if addr == ":"+getEnv("SERVER_PORT", "8080") || addr == "" {
+		addr = ":" + getEnv("SERVER_PORT", "8080")
 	}
 
+	log.Printf("starting server on %s", addr)
+	if err := router.Run(addr); err != nil {
+		log.Fatalf("failed to start server: %v", err)
+	}
+}
+
+func getEnv(key, fallback string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return fallback
+}
+
+func getEnvInt(key string, fallback int) int {
+	value := os.Getenv(key)
+	if value == "" {
+		return fallback
+	}
+	parsed, err := strconv.Atoi(value)
+	if err != nil {
+		return fallback
+	}
+	return parsed
+}
+
+func appVersion() string {
+	if X_buildTag != "" {
+		return X_buildTag
+	}
+	if X_buildRevisionShort != "" {
+		return X_buildRevisionShort
+	}
+	return "dev"
 }

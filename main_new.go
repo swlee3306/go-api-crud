@@ -1,3 +1,5 @@
+//go:build legacy
+
 package main
 
 import (
@@ -6,7 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"go-crud/config"
+	"github.com/swlee3306/go-api-crud/config"
 )
 
 func main() {

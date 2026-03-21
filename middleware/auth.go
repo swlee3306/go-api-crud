@@ -1,14 +1,14 @@
 package middleware
 
 import (
-	"go-crud/auth"
+	authsvc "github.com/swlee3306/go-api-crud/auth"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
-func AuthMiddleware(authService *auth.AuthService) gin.HandlerFunc {
+func AuthMiddleware(authService *authsvc.AuthService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Get token from Authorization header
 		authHeader := c.GetHeader("Authorization")
@@ -45,7 +45,7 @@ func AuthMiddleware(authService *auth.AuthService) gin.HandlerFunc {
 	}
 }
 
-func OptionalAuthMiddleware(authService *auth.AuthService) gin.HandlerFunc {
+func OptionalAuthMiddleware(authService *authsvc.AuthService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Get token from Authorization header
 		authHeader := c.GetHeader("Authorization")

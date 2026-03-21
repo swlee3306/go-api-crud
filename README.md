@@ -90,10 +90,10 @@ CREATE DATABASE go_crud_db;
 ### 5. 서버 실행
 ```bash
 # 개발 모드
-go run main_new.go
+go run .
 
 # 프로덕션 모드
-go build -o go_crud main_new.go
+go build -o go-api-crud .
 ./go_crud
 ```
 
@@ -102,7 +102,7 @@ go build -o go_crud main_new.go
 ```
 go-api-crud/
 ├── main.go                 # 원본 메인 파일 (레거시)
-├── main_new.go            # 새로운 메인 파일 (포트폴리오용)
+├── main.go                # 메인 실행 파일
 ├── main_LoadEnv.go        # 환경 변수 로드
 ├── main_LoadYml.go        # YAML 설정 로드
 ├── config/                # 설정 관리
@@ -285,7 +285,7 @@ GET /health
 ### Docker 사용법
 ```bash
 # Docker 이미지 빌드
-docker build -t go-crud .
+docker build -t go-api-crud .
 
 # Docker Compose로 실행
 docker-compose up -d
@@ -358,7 +358,7 @@ FROM golang:1.21-alpine AS builder
 WORKDIR /app
 COPY . .
 RUN go mod download
-RUN go build -o go_crud main_new.go
+RUN go build -o go-api-crud .
 
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates

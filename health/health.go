@@ -2,7 +2,7 @@ package health
 
 import (
 	"context"
-	"go-crud/config"
+	"github.com/swlee3306/go-api-crud/config"
 	"runtime"
 	"time"
 
@@ -51,7 +51,6 @@ func (hc *HealthChecker) AddCheck(name string, checkFunc func() Check) {
 }
 
 func (hc *HealthChecker) GetHealth() HealthCheck {
-	start := time.Now()
 	checks := make(map[string]Check)
 	overallStatus := Healthy
 	
@@ -128,7 +127,7 @@ func DatabaseHealthCheck() Check {
 	
 	// Check connection pool stats
 	stats := sqlDB.Stats()
-	if stats.OpenConnections > stats.MaxOpenConnections*0.9 {
+	if stats.MaxOpenConnections > 0 && float64(stats.OpenConnections) > float64(stats.MaxOpenConnections)*0.9 {
 		return Check{
 			Status:  Degraded,
 			Message: "Database connection pool is nearly full",

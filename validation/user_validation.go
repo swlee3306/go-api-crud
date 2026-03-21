@@ -1,7 +1,7 @@
 package validation
 
 import (
-	"go-crud/models"
+	"github.com/swlee3306/go-api-crud/models"
 )
 
 type UserCreateRequest struct {

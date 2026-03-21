@@ -13,6 +13,8 @@ import (
 	"gorm.io/gorm/logger"
 )
 
+var DB *gorm.DB
+
 // DatabaseConfig holds database configuration
 type DatabaseConfig struct {
 	Host     string
