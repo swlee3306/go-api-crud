@@ -1,4 +1,4 @@
-# Go-CRUD
+# go-api-crud
 
 ## 한 줄 소개
 Go로 API와 DB CRUD 구조를 연습한 백엔드 실습 저장소입니다.
@@ -57,8 +57,8 @@ Go 언어를 사용하여 데이터베이스의 기본적인 CRUD(Create, Read, 
 
 ### 1. 저장소 클론
 ```bash
-git clone https://github.com/swlee3306/go_crud.git
-cd go_crud
+git clone https://github.com/swlee3306/go-api-crud.git
+cd go-api-crud
 ```
 
 ### 2. 의존성 설치
@@ -100,7 +100,7 @@ go build -o go_crud main_new.go
 ## 🏗️ 프로젝트 구조
 
 ```
-go_crud/
+go-api-crud/
 ├── main.go                 # 원본 메인 파일 (레거시)
 ├── main_new.go            # 새로운 메인 파일 (포트폴리오용)
 ├── main_LoadEnv.go        # 환경 변수 로드
@@ -444,9 +444,9 @@ LOG_FORMAT=json
 
 ## 📞 지원 및 문의
 
-- 이슈 리포트: [GitHub Issues](https://github.com/swlee3306/go_crud/issues)
+- 이슈 리포트: [GitHub Issues](https://github.com/swlee3306/go-api-crud/issues)
 - 이메일: swlee3306@gmail.com
-- 문서: [Wiki](https://github.com/swlee3306/go_crud/wiki)
+- 문서: [Wiki](https://github.com/swlee3306/go-api-crud/wiki)
 
 ---
 
