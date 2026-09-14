@@ -21,6 +21,9 @@ var (
 )
 
 func main() {
+	if err := config.ValidateRuntimeSecrets(); err != nil {
+		log.Fatal(err)
+	}
 	log.Printf("go-api-crud: build info")
 	log.Printf("\t buildDatetime: %s", X_buildDatetime)
 	log.Printf("\t buildRevision: %s (%s)", X_buildRevisionShort, X_buildRevision)
@@ -39,7 +42,7 @@ func main() {
 		log.Fatalf("failed to run auto migration: %v", err)
 	}
 
-	authService := authsvc.NewAuthService(getEnv("JWT_SECRET", ""))
+	authService := authsvc.NewAuthService(os.Getenv("JWT_SECRET"))
 	rateLimiter := middleware.NewRateLimiter(
 		getEnvInt("RATE_LIMIT_REQUESTS", 100),
 		time.Duration(getEnvInt("RATE_LIMIT_WINDOW_MINUTES", 1))*time.Minute,

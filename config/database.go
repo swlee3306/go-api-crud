@@ -33,7 +33,7 @@ func LoadDatabaseConfig() *DatabaseConfig {
 		Host:     getEnv("DB_HOST", "localhost"),
 		Port:     port,
 		User:     getEnv("DB_USER", "root"),
-		Password: getEnv("DB_PASSWORD", ""),
+		Password: os.Getenv("DB_PASSWORD"),
 		DBName:   getEnv("DB_NAME", "go_crud_db"),
 		Driver:   getEnv("DB_DRIVER", "mysql"),
 	}
