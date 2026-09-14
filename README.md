@@ -20,6 +20,9 @@ JWT 인증, 사용자 CRUD, health check를 포함한 Go API 서버 예제입니
 
 ## 실행 방법
 
+먼저 [공개 설정과 레거시 배포 파일의 경계](docs/PUBLIC_CONFIGURATION.md)를 확인하세요.
+기존 `docker-compose.yml`은 현재 코드와 DB 변수 이름이 다르고 고정 비밀값 후보가 남아 있어, 검증된 빠른 시작 경로로 권장하지 않습니다.
+
 ### 1. 저장소 클론
 ```bash
 git clone https://github.com/swlee3306/go-api-crud.git
@@ -37,7 +40,7 @@ go mod tidy
 ```bash
 export DB_DRIVER=sqlite
 export DB_NAME=go_crud_db
-export JWT_SECRET=change-me
+export JWT_SECRET=REPLACE_WITH_A_UNIQUE_LOCAL_SECRET
 export SERVER_PORT=8080
 ```
 
@@ -47,13 +50,14 @@ MySQL 예시는 아래와 같습니다.
 export DB_DRIVER=mysql
 export DB_HOST=localhost
 export DB_PORT=3306
-export DB_USER=root
-export DB_PASSWORD=password
+export DB_USER=REPLACE_WITH_YOUR_DATABASE_USER
+export DB_PASSWORD=REPLACE_WITH_YOUR_DATABASE_PASSWORD
 export DB_NAME=go_crud_db
-export JWT_SECRET=change-me
+export JWT_SECRET=REPLACE_WITH_A_UNIQUE_LOCAL_SECRET
 ```
 
 `.env.example` 파일도 함께 제공됩니다.
+위 `REPLACE_WITH_...` 값은 실행 가능한 자격 증명이 아닙니다. 실제 값은 비밀 저장소 등에서 설정하고 예시를 그대로 사용하지 마세요. 기존 `.env.example`과 코드의 기본 비밀값도 운영용이 아닙니다.
 
 ### 4. 실행
 ```bash
