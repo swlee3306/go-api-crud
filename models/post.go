@@ -14,9 +14,9 @@ type Category struct {
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at,omitempty"`
-	
+
 	// One-to-Many relationship
-	Posts []Post `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"posts,omitempty"`
+	Posts []Post `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;" json:"posts,omitempty"`
 }
 
 // TableName specifies the table name for Category
@@ -37,10 +37,10 @@ type Post struct {
 	CreatedAt  time.Time      `json:"created_at"`
 	UpdatedAt  time.Time      `json:"updated_at"`
 	DeletedAt  gorm.DeletedAt `gorm:"index" json:"deleted_at,omitempty"`
-	
+
 	// One-to-Many relationships
-	User     *User      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user,omitempty"`
-	Category *Category  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"category,omitempty"`
+	User     *User     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user,omitempty"`
+	Category *Category `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;" json:"category,omitempty"`
 	Comments []Comment `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"comments,omitempty"`
 }
 
@@ -58,7 +58,7 @@ type Comment struct {
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at,omitempty"`
-	
+
 	// One-to-Many relationships
 	User *User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user,omitempty"`
 	Post *Post `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"post,omitempty"`
