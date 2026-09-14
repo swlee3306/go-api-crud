@@ -21,7 +21,7 @@ JWT 인증, 사용자 CRUD, health check를 포함한 Go API 서버 예제입니
 ## 실행 방법
 
 먼저 [공개 설정과 레거시 배포 파일의 경계](docs/PUBLIC_CONFIGURATION.md)를 확인하세요.
-기존 `docker-compose.yml`은 현재 코드와 DB 변수 이름이 다르고 고정 비밀값 후보가 남아 있어, 검증된 빠른 시작 경로로 권장하지 않습니다.
+`docker-compose.yml`의 DB 변수 이름과 고정 비밀값은 정리했습니다. 다만 컨테이너 전체 실행은 미검증이므로 검증된 배포 경로라고 주장하지 않습니다.
 
 ### 1. 저장소 클론
 ```bash
@@ -57,7 +57,7 @@ export JWT_SECRET=REPLACE_WITH_A_UNIQUE_LOCAL_SECRET
 ```
 
 `.env.example` 파일도 함께 제공됩니다.
-위 `REPLACE_WITH_...` 값은 실행 가능한 자격 증명이 아닙니다. 실제 값은 비밀 저장소 등에서 설정하고 예시를 그대로 사용하지 마세요. 기존 `.env.example`과 코드의 기본 비밀값도 운영용이 아닙니다.
+위 `REPLACE_WITH_...` 값은 실행 가능한 자격 증명이 아닙니다. 실제 값은 비밀 저장소에서 설정하세요. `JWT_SECRET`은 32바이트 이상의 임의 생성 값이 필요하며, DB·JWT 고정 기본값은 제거했습니다. 비밀값 누락 또는 알려진 placeholder는 DB 연결 전에 거부합니다. Compose는 `DB_PASSWORD`, `MYSQL_ROOT_PASSWORD`, `JWT_SECRET`을 별도로 요구합니다.
 
 ### 4. 실행
 ```bash

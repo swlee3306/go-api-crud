@@ -6,13 +6,13 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_CONNECTION=mysql
+      - DB_DRIVER=mysql
       - DB_HOST=mysql
       - DB_PORT=3306
-      - DB_DATABASE=go_crud_db
-      - DB_USERNAME=root
-      - DB_PASSWORD=REPLACE_WITH_PRIVATE_VALUE
-      - JWT_SECRET=your-secret-key-here
+      - DB_NAME=go_crud_db
+      - DB_USER=appuser
+      - DB_PASSWORD=${DB_PASSWORD:?Set DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET:?Set JWT_SECRET}
       - LOG_LEVEL=INFO
     depends_on:
       mysql:
@@ -24,10 +24,10 @@ services:
   mysql:
     image: mysql:8.0
     environment:
-      - MYSQL_ROOT_PASSWORD=REPLACE_WITH_PRIVATE_VALUE
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=go_crud_db
       - MYSQL_USER=appuser
-      - MYSQL_PASSWORD=REPLACE_WITH_PRIVATE_VALUE
+      - MYSQL_PASSWORD=${DB_PASSWORD:?Set DB_PASSWORD}
     ports:
       - "3306:3306"
     volumes:

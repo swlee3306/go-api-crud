@@ -1,5 +1,24 @@
 # Public configuration boundary
 
+## Security update — 2026-09-14
+
+The current Compose file now uses `DB_DRIVER`, `DB_NAME` and `DB_USER=appuser`.
+Its application and MySQL user use the same required `DB_PASSWORD`; the root
+password is a separate required `MYSQL_ROOT_PASSWORD`. `JWT_SECRET` is also
+required during Compose interpolation. No real values are stored in these fields.
+The `.env.example` password and signing-secret fields are empty.
+
+Startup now validates secrets before opening the database. JWT secrets must be
+at least 32 non-whitespace bytes and must not be recognized example placeholders;
+MySQL/PostgreSQL require a nonempty, non-placeholder password. This length check
+is not an entropy guarantee: generate a random secret through your secret manager.
+SQLite does not require a DB password. Fixed DB/JWT defaults have been removed.
+
+These changes affect future starts, not already running services. Set the required
+secrets before using the updated code. No container or operating service was
+started or modified during verification. The review below describes the prior
+configuration; variable-name and fixed-default findings above have been addressed.
+
 Reviewed against the repository source on 2026-09-14. This is a configuration
 review, not a verified container deployment guide.
 
